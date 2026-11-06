@@ -99,7 +99,7 @@ export default function AdminView({ products, orders, onAddProduct, onDeleteProd
                 <button
                   type="button"
                   onClick={() => setConfirmReset(false)}
-                  className="h-11 rounded-full px-4 text-[13px] font-medium text-gray-600"
+                  className="h-11 rounded-lg px-4 text-[13px] font-medium text-gray-600"
                 >
                   Atšaukti
                 </button>
@@ -109,7 +109,7 @@ export default function AdminView({ products, orders, onAddProduct, onDeleteProd
                     onResetDemo()
                     setConfirmReset(false)
                   }}
-                  className="h-11 rounded-full bg-red-600 px-4 text-[13px] font-semibold text-white"
+                  className="h-11 rounded-lg bg-red-600 px-4 text-[13px] font-semibold text-white"
                 >
                   Patvirtinti atkūrimą
                 </button>
@@ -118,7 +118,7 @@ export default function AdminView({ products, orders, onAddProduct, onDeleteProd
               <button
                 type="button"
                 onClick={() => setConfirmReset(true)}
-                className="inline-flex h-11 items-center gap-2 rounded-full border border-gray-200 bg-white px-4 text-[13px] font-medium text-gray-700 transition hover:border-black"
+                className="inline-flex h-11 items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 text-[13px] font-medium text-gray-700 transition hover:border-black"
               >
                 <RotateCcw size={15} aria-hidden="true" />
                 Atkurti demo duomenis
@@ -127,7 +127,7 @@ export default function AdminView({ products, orders, onAddProduct, onDeleteProd
             <button
               type="button"
               onClick={() => setFormOpen(true)}
-              className="inline-flex h-11 items-center gap-2 rounded-full bg-black px-5 text-[13px] font-medium text-white shadow-lg shadow-black/10 transition hover:bg-gray-800 active:scale-[0.97]"
+              className="inline-flex h-11 items-center gap-2 rounded-lg bg-black px-5 text-[13px] font-medium text-white shadow-lg shadow-black/10 transition hover:bg-gray-800 active:scale-[0.97]"
             >
               <Plus size={16} aria-hidden="true" />
               Nauja prekė
@@ -192,7 +192,7 @@ export default function AdminView({ products, orders, onAddProduct, onDeleteProd
           užsakymais
         </p>
 
-        <div className="mt-6 grid gap-4 lg:grid-cols-[1.5fr_1fr]">
+        <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-[1.5fr_1fr]">
           <RevenueChart
             title="Apyvarta pagal laikotarpį"
             subtitle={period.unit === 'hour' ? 'Paskutinės 24 valandos, 2 val. intervalai' : `Paskutinės ${period.label}`}

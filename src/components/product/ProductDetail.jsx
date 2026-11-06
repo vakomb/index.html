@@ -1,8 +1,16 @@
 import { useState } from 'react'
-import { Flame, Gift, RefreshCw, ShieldCheck, Truck, X, Zap } from 'lucide-react'
+import { Check, Flame, Gift, RefreshCw, ShieldCheck, Truck, X, Zap } from 'lucide-react'
 import { CATEGORY_BY_ID, FREE_SHIPPING_THRESHOLD } from '../../data/catalog.js'
 import { countLabel, formatEUR, formatNumber } from '../../lib/format.js'
-import { getCategoryMeta, getDefaultSize, getSize, getSizes, isLowStock, isSoldOut } from '../../lib/pricing.js'
+import {
+  getCategoryMeta,
+  getDefaultSize,
+  getSize,
+  getSizes,
+  isLowStock,
+  isSoldOut,
+  unitPriceLabel,
+} from '../../lib/pricing.js'
 import { usePresence } from '../../hooks/usePresence.js'
 import { useOverlayBehavior } from '../../hooks/useOverlayBehavior.js'
 import SmartImage from '../ui/SmartImage.jsx'
@@ -39,6 +47,7 @@ export default function ProductDetail({ product, onClose, onAdd, onBuyNow, inCar
   const [shown, setShown] = useState(product)
   const [sizeId, setSizeId] = useState(product ? getDefaultSize(product).id : null)
   const [qty, setQty] = useState(1)
+  const [imageIndex, setImageIndex] = useState(0)
 
   useOverlayBehavior(Boolean(product), onClose)
 
@@ -48,6 +57,7 @@ export default function ProductDetail({ product, onClose, onAdd, onBuyNow, inCar
     if (!shown || shown.id !== product.id) {
       setSizeId(getDefaultSize(product).id)
       setQty(1)
+      setImageIndex(0)
     }
     setShown(product)
   }
@@ -66,6 +76,9 @@ export default function ProductDetail({ product, onClose, onAdd, onBuyNow, inCar
   const lineTotal = size.price * effectiveQty
   const lineSavings = size.compareAt ? (size.compareAt - size.price) * effectiveQty : 0
   const canAdd = !soldOut && available > 0
+  const images = [shown.image, shown.imageAlt].filter(Boolean)
+  const isSet = shown.category === 'meginukai' || shown.category === 'rinkiniai'
+  const unitPrice = unitPriceLabel(size)
 
   const add = () => onAdd(shown.id, size.id, effectiveQty)
   const buyNow = () => onBuyNow(shown.id, size.id, effectiveQty)
@@ -105,24 +118,43 @@ export default function ProductDetail({ product, onClose, onAdd, onBuyNow, inCar
           <div className="md:grid md:grid-cols-2">
             <div className="relative md:sticky md:top-0 md:h-[calc(100dvh-3rem)] md:self-start lg:h-[calc(100dvh-4rem)]">
               <SmartImage
-                src={shown.image}
+                src={images[imageIndex] ?? shown.image}
                 alt={shown.name}
                 priority
                 sizes="(min-width: 768px) 50vw, 100vw"
-                className="aspect-[4/5] w-full md:aspect-auto md:h-full"
+                className="aspect-square w-full md:aspect-auto md:h-full"
               />
               <ProductBadges product={shown} className="absolute left-4 top-4 md:left-5 md:top-5" />
+              {images.length > 1 && (
+                <div className="absolute bottom-4 left-4 flex gap-2">
+                  {images.map((image, index) => (
+                    <button
+                      key={image}
+                      type="button"
+                      onClick={() => setImageIndex(index)}
+                      aria-label={`${index + 1} nuotrauka`}
+                      aria-pressed={imageIndex === index}
+                      className={`overflow-hidden rounded-lg ring-2 transition ${
+                        imageIndex === index ? 'ring-white' : 'ring-transparent opacity-70 hover:opacity-100'
+                      }`}
+                    >
+                      <SmartImage src={image} alt="" sizes="56px" className="size-14" />
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="px-5 pb-36 pt-6 md:px-10 md:pb-12 md:pt-12 lg:px-14">
               <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-gray-500">
                 {category?.label} · {shown.audience}
               </p>
-              <h2 className="mt-2 font-serif text-[34px] font-medium leading-[1.05] tracking-tight md:text-5xl">
+              <h2 className="mt-2 text-[26px] font-extrabold leading-tight tracking-tight md:text-[34px]">
                 {shown.name}
               </h2>
               <p className="mt-2 text-[13px] text-gray-500">
-                Įkvėptas: <span className="text-gray-800">{shown.inspiration}</span>
+                {isSet ? 'Rinkinyje: ' : 'Įkvėptas: '}
+                <span className="text-gray-800">{shown.inspiration}</span>
               </p>
 
               {shown.reviewsCount > 0 && (
@@ -139,7 +171,7 @@ export default function ProductDetail({ product, onClose, onAdd, onBuyNow, inCar
                 </button>
               )}
 
-              <p className="mt-5 font-serif text-xl italic leading-snug text-gray-700 md:text-2xl">{shown.tagline}</p>
+              <p className="mt-4 text-[16px] leading-snug text-gray-600">{shown.tagline}</p>
 
               <div className="mt-6 flex flex-wrap items-end gap-x-3 gap-y-2">
                 <span className="text-3xl font-semibold tabular-nums tracking-tight">{formatEUR(size.price)}</span>
@@ -152,6 +184,7 @@ export default function ProductDetail({ product, onClose, onAdd, onBuyNow, inCar
                   </span>
                 )}
               </div>
+              {unitPrice && <p className="mt-1 text-[13px] tabular-nums text-gray-500">{unitPrice}</p>}
               <p className="mt-1.5 text-xs text-gray-500">
                 PVM įskaičiuotas · Nemokamas pristatymas užsakymams nuo {formatEUR(FREE_SHIPPING_THRESHOLD)}
               </p>
@@ -160,7 +193,7 @@ export default function ProductDetail({ product, onClose, onAdd, onBuyNow, inCar
 
               <fieldset className="mt-7">
                 <legend className="text-[13px] font-medium text-gray-700">Talpa</legend>
-                <div className={`mt-2.5 grid gap-2 ${sizes.length === 3 ? 'grid-cols-3' : 'grid-cols-2'}`}>
+                <div className={`mt-2.5 grid gap-2 ${sizes.length === 3 ? 'grid-cols-3' : sizes.length === 2 ? 'grid-cols-2' : 'grid-cols-1'}`}>
                   {sizes.map((option) => {
                     const active = option.id === size.id
                     return (
@@ -233,7 +266,7 @@ export default function ProductDetail({ product, onClose, onAdd, onBuyNow, inCar
                     type="button"
                     onClick={buyNow}
                     disabled={!canAdd}
-                    className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-full bg-black px-6 text-[15px] font-medium text-white transition hover:bg-gray-800 active:scale-[0.97] disabled:bg-gray-200 disabled:text-gray-400"
+                    className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-lg bg-black px-6 text-[15px] font-medium text-white transition hover:bg-gray-800 active:scale-[0.97] disabled:bg-gray-200 disabled:text-gray-400"
                   >
                     <Zap size={16} aria-hidden="true" />
                     Pirkti dabar
@@ -268,6 +301,22 @@ export default function ProductDetail({ product, onClose, onAdd, onBuyNow, inCar
                 </li>
               </ul>
 
+              {shown.includes?.length > 0 && (
+                <section className="mt-7 rounded-xl bg-mist p-4" aria-labelledby="includes-title">
+                  <h3 id="includes-title" className="text-[14px] font-bold">
+                    Rinkinyje
+                  </h3>
+                  <ul className="mt-2 space-y-1.5 text-[14px] text-gray-700">
+                    {shown.includes.map((item) => (
+                      <li key={item} className="flex items-center gap-2">
+                        <Check size={14} className="text-emerald-600" aria-hidden="true" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
+
               <section className="mt-7" aria-labelledby="about-scent">
                 <h3 id="about-scent" className="text-[15px] font-semibold">
                   Apie kvapą
@@ -299,7 +348,7 @@ export default function ProductDetail({ product, onClose, onAdd, onBuyNow, inCar
               </div>
 
               <p className="mt-8 text-[11px] leading-relaxed text-gray-400">
-                {shown.inspiration} yra jo savininko prekės ženklas. Vaidore nėra susijusi su šiuo prekės ženklu;
+                {isSet ? 'Minimi kvapų pavadinimai' : shown.inspiration} yra jų savininkų prekių ženklai. Vaidore nėra susijusi su šiais prekių ženklais;
                 pavadinimas naudojamas tik kvapo profiliui apibūdinti.
               </p>
             </div>
@@ -325,7 +374,7 @@ export default function ProductDetail({ product, onClose, onAdd, onBuyNow, inCar
               type="button"
               onClick={buyNow}
               disabled={!canAdd}
-              className="inline-flex h-12 flex-1 items-center justify-center gap-1.5 rounded-full bg-black px-3 text-[15px] font-medium text-white transition active:scale-[0.97] disabled:bg-gray-200 disabled:text-gray-400"
+              className="inline-flex h-12 flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg bg-black px-3 text-[14px] font-semibold text-white transition active:scale-[0.97] disabled:bg-gray-200 disabled:text-gray-400"
             >
               <Zap size={15} aria-hidden="true" />
               Pirkti dabar

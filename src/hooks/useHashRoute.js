@@ -9,6 +9,14 @@ export const ROUTES = {
   admin: 'admin',
   checkout: 'apmokejimas',
   success: 'aciu',
+  reviews: 'atsiliepimai',
+  blog: 'tinklarastis',
+  contact: 'kontaktai',
+  shipping: 'pristatymas',
+  returns: 'grazinimas',
+  terms: 'pirkimo-taisykles',
+  privacy: 'privatumas',
+  partners: 'partneriams',
 }
 
 const SLUG_TO_ROUTE = Object.fromEntries(Object.entries(ROUTES).map(([route, slug]) => [slug, route]))

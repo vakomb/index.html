@@ -10,14 +10,14 @@ export default function QuantityStepper({ value, onChange, min = 1, max = 99, si
     <div
       role="group"
       aria-label={label}
-      className={`inline-flex items-center rounded-full border border-gray-200 bg-white ${dims}`}
+      className={`inline-flex items-center rounded-lg border border-gray-200 bg-white ${dims}`}
     >
       <button
         type="button"
         onClick={() => canDecrease && onChange(value - 1)}
         disabled={!canDecrease}
         aria-label="Sumažinti kiekį"
-        className={`flex h-full ${button} items-center justify-center rounded-full text-gray-700 transition hover:bg-smoke active:scale-90 disabled:text-gray-300 disabled:hover:bg-transparent`}
+        className={`flex h-full ${button} items-center justify-center rounded-md text-gray-700 transition hover:bg-smoke active:scale-90 disabled:text-gray-300 disabled:hover:bg-transparent`}
       >
         <Minus size={15} strokeWidth={1.75} />
       </button>
@@ -29,7 +29,7 @@ export default function QuantityStepper({ value, onChange, min = 1, max = 99, si
         onClick={() => canIncrease && onChange(value + 1)}
         disabled={!canIncrease}
         aria-label="Padidinti kiekį"
-        className={`flex h-full ${button} items-center justify-center rounded-full text-gray-700 transition hover:bg-smoke active:scale-90 disabled:text-gray-300 disabled:hover:bg-transparent`}
+        className={`flex h-full ${button} items-center justify-center rounded-md text-gray-700 transition hover:bg-smoke active:scale-90 disabled:text-gray-300 disabled:hover:bg-transparent`}
       >
         <Plus size={15} strokeWidth={1.75} />
       </button>

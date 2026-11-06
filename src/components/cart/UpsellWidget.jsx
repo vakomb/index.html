@@ -46,7 +46,7 @@ export default function UpsellWidget({ products, lines, onAdd }) {
       <button
         type="button"
         onClick={() => onAdd(pick.id, size.id, 1)}
-        className="mt-3 flex h-10 w-full items-center justify-center gap-1.5 rounded-full bg-black text-[13px] font-medium text-white transition hover:bg-gray-800 active:scale-[0.98]"
+        className="mt-3 flex h-10 w-full items-center justify-center gap-1.5 rounded-lg bg-black text-[13px] font-medium text-white transition hover:bg-gray-800 active:scale-[0.98]"
       >
         <Plus size={15} strokeWidth={2} aria-hidden="true" />
         Pridėti aliejinį koncentratą (+{formatEURWhole(size.price)})

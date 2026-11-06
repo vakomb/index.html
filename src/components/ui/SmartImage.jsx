@@ -40,10 +40,10 @@ export default function SmartImage({
         <div
           role="img"
           aria-label={alt}
-          className="absolute inset-0 flex flex-col items-center justify-center bg-linear-to-br from-smoke via-mist to-white"
+          className="@container absolute inset-0 flex flex-col items-center justify-center bg-linear-to-br from-smoke via-mist to-white"
         >
-          <span className="font-serif text-5xl text-gray-300">V</span>
-          <span className="mt-2 text-[10px] uppercase tracking-[0.35em] text-gray-400">Vaidore</span>
+          <span className="text-2xl font-light text-gray-300 @[140px]:text-5xl">V</span>
+          <span className="mt-2 hidden text-[10px] uppercase tracking-[0.35em] text-gray-400 @[140px]:block">Vaidore</span>
         </div>
       ) : (
         <img

@@ -59,7 +59,7 @@ export default function InventoryTable({ products, onDelete, onOpen }) {
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Ieškoti kataloge…"
-            className="h-10 w-full rounded-full border border-gray-200 pl-9 pr-3 text-base outline-none focus:border-black md:text-[13px]"
+            className="h-10 w-full rounded-lg border border-gray-200 pl-9 pr-3 text-base outline-none focus:border-black md:text-[13px]"
           />
         </label>
       </div>

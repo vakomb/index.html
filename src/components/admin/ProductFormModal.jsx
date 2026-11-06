@@ -173,7 +173,7 @@ export default function ProductFormModal({ open, onClose, onSubmit }) {
 
         <form onSubmit={handleSubmit} noValidate className="flex min-h-0 flex-1 flex-col">
           <div className="flex-1 overflow-y-auto overscroll-contain">
-            <div className="grid gap-8 px-5 py-6 md:px-8 lg:grid-cols-[1fr_300px]">
+            <div className="grid grid-cols-1 gap-8 px-5 py-6 md:px-8 lg:grid-cols-[1fr_300px]">
               <div className="grid gap-5">
                 <div className="grid gap-4 sm:grid-cols-2">
                   <TextField
@@ -323,13 +323,13 @@ export default function ProductFormModal({ open, onClose, onSubmit }) {
             <button
               type="button"
               onClick={onClose}
-              className="h-11 rounded-full px-5 text-sm font-medium text-gray-600 hover:text-black"
+              className="h-11 rounded-lg px-5 text-sm font-medium text-gray-600 hover:text-black"
             >
               Atšaukti
             </button>
             <button
               type="submit"
-              className="h-11 rounded-full bg-black px-6 text-sm font-medium text-white transition hover:bg-gray-800 active:scale-[0.98]"
+              className="h-11 rounded-lg bg-black px-6 text-sm font-medium text-white transition hover:bg-gray-800 active:scale-[0.98]"
             >
               Paskelbti parduotuvėje
             </button>

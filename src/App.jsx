@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { SEED_PRODUCTS } from './data/products.js'
+import { REGIONS } from './data/catalog.js'
+import { EMPTY_FILTER } from './data/navigation.js'
+import { INFO_PAGES } from './data/pages.js'
 import { useHashRoute } from './hooks/useHashRoute.js'
 import { usePersistentState } from './hooks/usePersistentState.js'
 import { generateOrderId } from './lib/format.js'
@@ -8,6 +11,9 @@ import AnnouncementBar from './components/layout/AnnouncementBar.jsx'
 import Header from './components/layout/Header.jsx'
 import TabBar from './components/layout/TabBar.jsx'
 import Footer from './components/layout/Footer.jsx'
+import MobileMenu from './components/layout/MobileMenu.jsx'
+import SearchOverlay from './components/layout/SearchOverlay.jsx'
+import AccountDrawer from './components/layout/AccountDrawer.jsx'
 import CartDrawer from './components/cart/CartDrawer.jsx'
 import ProductDetail from './components/product/ProductDetail.jsx'
 import Toast from './components/ui/Toast.jsx'
@@ -17,13 +23,19 @@ import CheckoutView from './views/CheckoutView.jsx'
 import SuccessView from './views/SuccessView.jsx'
 import AboutView from './views/AboutView.jsx'
 import AdminView from './views/AdminView.jsx'
+import InfoView from './views/InfoView.jsx'
+import BlogView from './views/BlogView.jsx'
+import ReviewsView from './views/ReviewsView.jsx'
 
 // Raktų versija leidžia ateityje pakeisti duomenų struktūrą nesugadinant
 // lankytojų naršyklėse jau išsaugotos būsenos.
 const STORAGE_KEYS = {
-  products: 'vaidore:v1:products',
-  cart: 'vaidore:v1:cart',
-  orders: 'vaidore:v1:orders',
+  products: 'vaidore:v2:products',
+  cart: 'vaidore:v2:cart',
+  orders: 'vaidore:v2:orders',
+  account: 'vaidore:v2:account',
+  region: 'vaidore:v2:region',
+  newsletter: 'vaidore:v2:newsletter',
 }
 
 const PAGE_TITLES = {
@@ -33,6 +45,14 @@ const PAGE_TITLES = {
   admin: 'Admin panelė — Vaidore',
   checkout: 'Atsiskaitymas — Vaidore',
   success: 'Užsakymas gautas — Vaidore',
+  reviews: 'Atsiliepimai — Vaidore',
+  blog: 'Tinklaraštis — Vaidore',
+  contact: 'Kontaktai — Vaidore',
+  shipping: 'Pristatymas — Vaidore',
+  returns: 'Grąžinimas ir keitimas — Vaidore',
+  terms: 'Pirkimo taisyklės — Vaidore',
+  privacy: 'Privatumo politika — Vaidore',
+  partners: 'Partneriams — Vaidore',
 }
 
 export default function App() {
@@ -42,7 +62,13 @@ export default function App() {
   const [orders, setOrders] = usePersistentState(STORAGE_KEYS.orders, [])
   const [cartOpen, setCartOpen] = useState(false)
   const [activeProductId, setActiveProductId] = useState(null)
-  const [shopCategory, setShopCategory] = useState('visi')
+  const [shopFilter, setShopFilter] = useState(EMPTY_FILTER)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
+  const [accountOpen, setAccountOpen] = useState(false)
+  const [account, setAccount] = usePersistentState(STORAGE_KEYS.account, null)
+  const [region, setRegion] = usePersistentState(STORAGE_KEYS.region, 'LT')
+  const [newsletter, setNewsletter] = usePersistentState(STORAGE_KEYS.newsletter, false)
   const [lastOrder, setLastOrder] = useState(null)
   const [toast, setToast] = useState(null)
   const toastTimer = useRef(0)
@@ -176,12 +202,34 @@ export default function App() {
     navigate('checkout')
   }, [navigate])
 
-  const selectCategory = useCallback(
-    (categoryId) => {
-      setShopCategory(categoryId)
+  const openShop = useCallback(
+    (patch = {}) => {
+      setShopFilter({ ...EMPTY_FILTER, ...patch })
       navigate('shop')
     },
     [navigate],
+  )
+
+  const login = useCallback(
+    (nextAccount) => {
+      setAccount(nextAccount)
+      showToast({ title: `Sveiki, ${nextAccount.name.split(' ')[0]}!`, description: 'Prisijungėte prie Vaidore paskyros' })
+    },
+    [setAccount, showToast],
+  )
+
+  const logout = useCallback(() => {
+    setAccount(null)
+    setAccountOpen(false)
+    showToast({ title: 'Atsijungėte', description: 'Lauksime sugrįžtant' })
+  }, [setAccount, showToast])
+
+  const subscribe = useCallback(
+    (email) => {
+      setNewsletter(true)
+      showToast({ title: 'Prenumerata patvirtinta', description: `Nuolaidos kodą išsiuntėme adresu ${email}` })
+    },
+    [setNewsletter, showToast],
   )
 
   const placeOrder = useCallback(
@@ -231,14 +279,11 @@ export default function App() {
         image: product.image,
         action: {
           label: 'Peržiūrėti',
-          onClick: () => {
-            setShopCategory(product.category)
-            navigate('shop')
-          },
+          onClick: () => openShop({ category: product.category }),
         },
       })
     },
-    [navigate, setProducts, showToast],
+    [openShop, setProducts, showToast],
   )
 
   const deleteProduct = useCallback(
@@ -266,8 +311,8 @@ export default function App() {
       view = (
         <ShopView
           products={products}
-          category={shopCategory}
-          onCategoryChange={setShopCategory}
+          filter={shopFilter}
+          onFilterChange={setShopFilter}
           onOpenProduct={openProduct}
           onAdd={addToCart}
         />
@@ -289,17 +334,37 @@ export default function App() {
       )
       break
     case 'checkout':
-      view = <CheckoutView lines={lines} onPlaceOrder={placeOrder} onBackToCart={openCart} onNavigate={navigate} />
+      view = (
+        <CheckoutView
+          lines={lines}
+          onPlaceOrder={placeOrder}
+          onBackToCart={openCart}
+          onNavigate={navigate}
+          defaults={{
+            email: account?.email ?? '',
+            name: account?.name ?? '',
+            country: REGIONS.find((item) => item.code === region)?.country ?? 'Lietuva',
+          }}
+        />
+      )
       break
     case 'success':
       view = <SuccessView order={lastOrder ?? orders[0] ?? null} onNavigate={navigate} />
       break
+    case 'reviews':
+      view = <ReviewsView products={products} onOpenProduct={openProduct} />
+      break
+    case 'blog':
+      view = <BlogView onShop={openShop} />
+      break
     default:
-      view = (
+      view = INFO_PAGES[route] ? (
+        <InfoView route={route} onNavigate={navigate} />
+      ) : (
         <HomeView
           products={products}
           onNavigate={navigate}
-          onSelectCategory={selectCategory}
+          onShop={openShop}
           onOpenProduct={openProduct}
           onAdd={addToCart}
         />
@@ -309,13 +374,37 @@ export default function App() {
   return (
     <div className={`min-h-dvh bg-white ${isCheckout ? '' : 'pb-[calc(4.25rem+env(safe-area-inset-bottom))] md:pb-0'}`}>
       {!isCheckout && <AnnouncementBar />}
-      <Header route={route} onNavigate={navigate} cartCount={itemsInCart} onOpenCart={openCart} minimal={isCheckout} />
+      <Header
+        route={route}
+        shopFilter={shopFilter}
+        onNavigate={navigate}
+        onShop={openShop}
+        cartCount={itemsInCart}
+        cartTotal={totals.subtotal}
+        onOpenCart={openCart}
+        onOpenSearch={() => setSearchOpen(true)}
+        onOpenAccount={() => setAccountOpen(true)}
+        onOpenMenu={() => setMenuOpen(true)}
+        account={account}
+        region={region}
+        onRegionChange={setRegion}
+        minimal={isCheckout}
+      />
 
       <main key={route} className="animate-fade-up [animation-duration:0.5s]">
         {view}
       </main>
 
-      {!isCheckout && <Footer onNavigate={navigate} onSelectCategory={selectCategory} />}
+      {!isCheckout && (
+        <Footer
+          onNavigate={navigate}
+          onShop={openShop}
+          region={region}
+          onRegionChange={setRegion}
+          newsletter={newsletter}
+          onSubscribe={subscribe}
+        />
+      )}
       {!isCheckout && (
         <TabBar route={route} cartOpen={cartOpen} cartCount={itemsInCart} onNavigate={navigate} onOpenCart={openCart} />
       )}
@@ -333,12 +422,51 @@ export default function App() {
         onCheckout={goToCheckout}
         onBrowse={() => {
           setCartOpen(false)
-          navigate('shop')
+          openShop()
         }}
         onOpenProduct={(productId) => {
           setCartOpen(false)
           setActiveProductId(productId)
         }}
+        account={account}
+        onOpenAccount={() => {
+          setCartOpen(false)
+          setAccountOpen(true)
+        }}
+      />
+
+      <MobileMenu
+        open={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        onShop={openShop}
+        onNavigate={navigate}
+        onOpenAccount={() => setAccountOpen(true)}
+        account={account}
+        region={region}
+        onRegionChange={setRegion}
+      />
+
+      <SearchOverlay
+        open={searchOpen}
+        onClose={() => setSearchOpen(false)}
+        products={products}
+        onOpenProduct={(productId) => {
+          setSearchOpen(false)
+          setActiveProductId(productId)
+        }}
+        onSearchAll={(query) => {
+          setSearchOpen(false)
+          openShop({ query })
+        }}
+      />
+
+      <AccountDrawer
+        open={accountOpen}
+        onClose={() => setAccountOpen(false)}
+        account={account}
+        orders={orders}
+        onLogin={login}
+        onLogout={logout}
       />
 
       <ProductDetail
@@ -349,7 +477,11 @@ export default function App() {
         inCartQty={activeProductId ? quantityInCart(cart, activeProductId) : 0}
       />
 
-      <Toast toast={toast} onDismiss={dismissToast} />
+      <Toast
+        toast={toast}
+        onDismiss={dismissToast}
+        position={activeProductId || cartOpen || searchOpen || accountOpen ? 'top' : 'bottom'}
+      />
     </div>
   )
 }

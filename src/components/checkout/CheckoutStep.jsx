@@ -42,7 +42,7 @@ export default function CheckoutStep({ index, title, active, complete, locked, s
       </div>
 
       <div
-        className={`grid transition-[grid-template-rows] duration-500 ease-ios ${
+        className={`grid grid-cols-1 transition-[grid-template-rows] duration-500 ease-ios ${
           active ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
         }`}
       >

@@ -1,117 +1,194 @@
-import { Flame, Star, Truck } from 'lucide-react'
-import { CATEGORY_BY_ID, PYRAMID_TIERS } from '../../data/catalog.js'
+import { useEffect, useRef, useState } from 'react'
+import { Check, Flame, ShoppingBag, X } from 'lucide-react'
+import { CATEGORY_BY_ID } from '../../data/catalog.js'
 import { formatEUR, formatNumber } from '../../lib/format.js'
-import { discountPercent, getDefaultSize, isLowStock, isSoldOut } from '../../lib/pricing.js'
+import {
+  discountPercent,
+  getFromSize,
+  getSizes,
+  hasMultipleSizes,
+  isLowStock,
+  isSoldOut,
+  unitPriceLabel,
+} from '../../lib/pricing.js'
 import SmartImage from '../ui/SmartImage.jsx'
-import ProductBadges from '../ui/ProductBadges.jsx'
-import AddToCartButton from './AddToCartButton.jsx'
+import Stars from '../ui/Stars.jsx'
 
-const SHORT_TIER = { top: 'Viršutinės', heart: 'Širdies', base: 'Bazinės' }
-
-export default function ProductCard({ product, onOpen, onAdd, index = 0 }) {
-  const size = getDefaultSize(product)
-  const discount = discountPercent(size.price, size.compareAt)
-  const lowStock = isLowStock(product)
+function CardBadges({ product, discount }) {
   const soldOut = isSoldOut(product)
-  const category = CATEGORY_BY_ID[product.category]
+  return (
+    <div className="absolute left-2 top-2 flex flex-col items-start gap-1">
+      {soldOut && (
+        <span className="rounded-md bg-gray-800 px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-white">
+          Išparduota
+        </span>
+      )}
+      {!soldOut && discount > 0 && (
+        <span className="rounded-md bg-sale px-2 py-1 text-[11px] font-bold tabular-nums text-white">−{discount} %</span>
+      )}
+      {!soldOut && product.badge === 'bestseller' && (
+        <span className="rounded-md bg-black px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-white">
+          Populiariausias
+        </span>
+      )}
+      {!soldOut && product.badge === 'new' && (
+        <span className="rounded-md bg-white px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-black shadow-sm">
+          Naujiena
+        </span>
+      )}
+    </div>
+  )
+}
+
+const shortNotes = (notes) =>
+  [notes.top[0], notes.heart[0], notes.base[0]].filter(Boolean).join(' · ')
+
+// Parduotuvės kortelė: „nuo“ kaina, kaina už 100 ml, antra nuotrauka užvedus pelę
+// ir greitas dydžio pasirinkimas tiesiai kortelėje.
+export default function ProductCard({ product, onOpen, onAdd, index = 0, className = '' }) {
+  const [picking, setPicking] = useState(false)
+  const [added, setAdded] = useState(false)
+  const timer = useRef(0)
+  useEffect(() => () => window.clearTimeout(timer.current), [])
+
+  const from = getFromSize(product)
+  const multiple = hasMultipleSizes(product)
+  const discount = discountPercent(from.price, from.compareAt)
+  const soldOut = isSoldOut(product)
+  const lowStock = isLowStock(product)
+  const unitPrice = unitPriceLabel(from)
+
+  const confirmAdded = () => {
+    setAdded(true)
+    setPicking(false)
+    window.clearTimeout(timer.current)
+    timer.current = window.setTimeout(() => setAdded(false), 1500)
+  }
+
+  const handleAddClick = (event) => {
+    event.stopPropagation()
+    if (soldOut) return
+    if (multiple) {
+      setPicking(true)
+      return
+    }
+    if (onAdd(product.id, from.id, 1) !== false) confirmAdded()
+  }
+
+  const pickSize = (sizeId) => {
+    if (onAdd(product.id, sizeId, 1) !== false) confirmAdded()
+  }
 
   return (
     <article
-      className="group flex animate-fade-up flex-col"
-      style={{ animationDelay: `${Math.min(index, 8) * 60}ms` }}
+      className={`group flex animate-fade-up flex-col ${className}`}
+      style={{ animationDelay: `${Math.min(index, 8) * 50}ms` }}
     >
       <button
         type="button"
         onClick={() => onOpen(product.id)}
-        className="relative block overflow-hidden rounded-[22px] text-left outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
+        className="relative block overflow-hidden rounded-xl bg-mist text-left outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
         aria-label={`Atidaryti ${product.name}`}
       >
-        <SmartImage
-          src={product.image}
-          alt={product.name}
-          className="aspect-[4/5] w-full"
-          imgClassName="transition-transform duration-[1200ms] ease-ios group-hover:scale-[1.04]"
-        />
-        <ProductBadges product={product} className="absolute left-3 top-3" />
-        {discount > 0 && !soldOut && (
-          <span className="absolute right-3 top-3 rounded-full bg-white/90 px-2 py-1 text-[11px] font-semibold tabular-nums text-black backdrop-blur">
-            −{discount} %
-          </span>
+        <SmartImage src={product.image} alt={product.name} className="aspect-square w-full" />
+        {product.imageAlt && (
+          <SmartImage
+            src={product.imageAlt}
+            alt=""
+            className="absolute! inset-0 aspect-square w-full opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+          />
         )}
-        <span className="pointer-events-none absolute inset-x-3 bottom-3 hidden translate-y-2 rounded-full bg-white/90 py-2 text-center text-xs font-medium text-black opacity-0 backdrop-blur transition-all duration-500 ease-ios group-hover:translate-y-0 group-hover:opacity-100 md:block">
-          Peržiūrėti kvapo profilį
-        </span>
+        <CardBadges product={product} discount={discount} />
       </button>
 
-      <div className="flex flex-1 flex-col pt-3.5">
-        <div className="flex items-center justify-between gap-2">
-          <p className="truncate text-[10px] font-medium uppercase tracking-[0.18em] text-gray-500">
-            {category?.label ?? 'Kolekcija'} · {product.audience}
-          </p>
-          {product.reviewsCount > 0 && (
-            <span className="inline-flex shrink-0 items-center gap-1 text-[11px] text-gray-600">
-              <Star size={11} className="fill-black text-black" aria-hidden="true" />
-              <span className="font-medium tabular-nums">{formatNumber(product.rating, 1)}</span>
-              <span className="hidden text-gray-400 sm:inline">({formatNumber(product.reviewsCount)})</span>
-            </span>
-          )}
-        </div>
-
+      <div className="flex flex-1 flex-col pt-3">
+        <p className="truncate text-[11px] font-semibold uppercase tracking-[0.08em] text-gray-500">
+          {product.audience} · {CATEGORY_BY_ID[product.category]?.label ?? 'Kolekcija'}
+        </p>
         <button
           type="button"
           onClick={() => onOpen(product.id)}
-          className="mt-1.5 text-left text-[14px] font-medium leading-snug text-black hover:underline hover:underline-offset-4 md:text-[15px]"
+          className="mt-1 line-clamp-2 text-left text-[14px] font-bold leading-snug text-black hover:underline hover:underline-offset-2"
         >
           {product.name}
         </button>
+        <p className="mt-1 truncate text-[12px] text-gray-500">{shortNotes(product.notes)}</p>
 
-        <dl className="mt-2.5 space-y-1 text-[11px] leading-snug">
-          {PYRAMID_TIERS.map((tier) => (
-            <div key={tier.key} className="flex gap-2" title={`${tier.label}: ${product.notes[tier.key].join(', ')}`}>
-              <dt className="w-[58px] shrink-0 text-gray-400">{SHORT_TIER[tier.key]}</dt>
-              <dd className="truncate text-gray-700">{product.notes[tier.key].join(', ')}</dd>
-            </div>
-          ))}
-        </dl>
+        {product.reviewsCount > 0 && (
+          <p className="mt-1.5 flex items-center gap-1.5 text-[11px] text-gray-500">
+            <Stars rating={product.rating} size={11} />
+            <span className="tabular-nums">
+              {formatNumber(product.rating, 1)} ({formatNumber(product.reviewsCount)})
+            </span>
+          </p>
+        )}
 
-        <div className="mt-3 flex items-baseline gap-2">
-          <span className="text-[15px] font-semibold tabular-nums text-black md:text-base">{formatEUR(size.price)}</span>
-          {size.compareAt > size.price && (
-            <span className="text-xs tabular-nums text-gray-400 line-through">{formatEUR(size.compareAt)}</span>
+        <div className="mt-2 flex flex-wrap items-baseline gap-x-1.5">
+          {multiple && <span className="text-[12px] text-gray-500">nuo</span>}
+          <span className={`text-[16px] font-extrabold tabular-nums ${discount > 0 ? 'text-sale' : 'text-black'}`}>
+            {formatEUR(from.price)}
+          </span>
+          {from.compareAt > from.price && (
+            <span className="text-[12px] tabular-nums text-gray-400 line-through">{formatEUR(from.compareAt)}</span>
           )}
-          <span className="ml-auto text-[11px] text-gray-400">{size.label}</span>
         </div>
+        {unitPrice && <p className="text-[11px] tabular-nums text-gray-400">({unitPrice})</p>}
 
-        <div className="mt-2 min-h-[30px]">
-          {soldOut ? (
-            <p className="text-[11px] font-medium text-gray-500">Laikinai išparduota — netrukus vėl prekyboje</p>
-          ) : lowStock ? (
-            <div>
-              <p className="flex items-center gap-1 text-[11px] font-semibold text-red-700">
-                <Flame size={12} aria-hidden="true" />
-                Liko tik {product.stock} vnt.
-              </p>
-              <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-red-100">
-                <div
-                  className="h-full rounded-full bg-red-600 transition-all duration-700"
-                  style={{ width: `${Math.max(8, (product.stock / 10) * 100)}%` }}
-                />
-              </div>
+        {lowStock && (
+          <p className="mt-1.5 flex items-center gap-1 text-[11px] font-bold text-sale">
+            <Flame size={12} aria-hidden="true" /> Liko tik {product.stock} vnt.
+          </p>
+        )}
+
+        <div className="mt-auto pt-3">
+          {picking ? (
+            <div className="flex items-center gap-1 rounded-lg border border-black p-1" role="group" aria-label="Pasirinkite talpą">
+              {getSizes(product).map((size) => (
+                <button
+                  key={size.id}
+                  type="button"
+                  onClick={() => pickSize(size.id)}
+                  className="h-8 flex-1 rounded-md bg-mist text-[11px] font-bold transition hover:bg-black hover:text-white"
+                >
+                  {size.label}
+                </button>
+              ))}
+              <button
+                type="button"
+                onClick={() => setPicking(false)}
+                aria-label="Atšaukti"
+                className="flex size-8 shrink-0 items-center justify-center rounded-md text-gray-500 hover:text-black"
+              >
+                <X size={14} />
+              </button>
             </div>
           ) : (
-            <p className="flex items-center gap-1.5 text-[11px] text-gray-500">
-              <Truck size={12} aria-hidden="true" />
-              Išsiunčiame per 24 val.
-            </p>
+            <button
+              type="button"
+              onClick={handleAddClick}
+              disabled={soldOut}
+              className={`flex h-10 w-full items-center justify-center gap-2 rounded-lg text-[13px] font-bold transition-all duration-300 active:scale-[0.97] ${
+                soldOut
+                  ? 'cursor-not-allowed bg-smoke text-gray-400'
+                  : added
+                    ? 'bg-emerald-600 text-white'
+                    : 'bg-black text-white hover:bg-gray-800'
+              }`}
+            >
+              {soldOut ? (
+                'Išparduota'
+              ) : added ? (
+                <>
+                  <Check size={15} strokeWidth={2.5} aria-hidden="true" /> Pridėta
+                </>
+              ) : (
+                <>
+                  <ShoppingBag size={15} strokeWidth={2} aria-hidden="true" /> Į krepšelį
+                </>
+              )}
+            </button>
           )}
         </div>
-
-        <AddToCartButton
-          className="mt-3 w-full"
-          size="sm"
-          soldOut={soldOut}
-          onAdd={() => onAdd(product.id, size.id, 1)}
-        />
       </div>
     </article>
   )

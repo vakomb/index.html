@@ -1,8 +1,6 @@
 import { PHOTO, unsplash } from './images.js'
 
-// Pradinis katalogas. Administratoriaus panelėje pridėtos prekės
-// įrašomos į tą patį masyvą (išsaugoma naršyklės localStorage).
-export const SEED_PRODUCTS = [
+const BASE_PRODUCTS = [
   {
     id: 'n05-libre',
     code: 'N° 05',
@@ -318,3 +316,178 @@ export const SEED_PRODUCTS = [
     createdAt: '2026-10-30T09:00:00.000Z',
   },
 ]
+
+// Mėginukų ir dovanų rinkiniai
+const SET_PRODUCTS = [
+  {
+    id: 'samples-women',
+    code: 'Mėginukai',
+    name: 'Mėginukų rinkinys moterims — 8 × 2 ml',
+    inspiration: '8 populiariausi moteriški kvapai',
+    category: 'meginukai',
+    audience: 'Moterims',
+    price: 19,
+    compareAt: 29,
+    stock: 26,
+    badge: 'bestseller',
+    rating: 4.9,
+    reviewsCount: 845,
+    popularity: 97,
+    season: 'Išbandymui ir kelionėms',
+    tagline: 'Aštuoni kvapai, viena dėžutė — ir jūsų naujas mėgstamiausias.',
+    description:
+      'Rinkinyje — aštuoni populiariausi moteriški Vaidore kvapai po 2 ml su purškikliais. Kiekvieną išbandykite ant odos visą dieną ir pajuskite, kaip jis keičiasi nuo ryto iki vakaro. Pasirinkus mėgstamiausią, rinkinio kainą atskaitysime perkant 50 ml flakoną.',
+    includes: ['N° 05 — Libre', 'N° 21 — Black Orchid', 'N° 40 — Baccarat Rouge 540', 'N° 12 — Tobacco Vanille', '+ 4 sezono kvapai'],
+    notes: {
+      top: ['Bergamotė', 'Mandarinas', 'Levanda'],
+      heart: ['Jazminas', 'Rožė', 'Juodoji orchidėja'],
+      base: ['Vanilė', 'Ambra', 'Muskusas'],
+    },
+    image: unsplash(PHOTO.perfumeTable),
+    createdAt: '2026-09-01T09:00:00.000Z',
+  },
+  {
+    id: 'samples-men',
+    code: 'Mėginukai',
+    name: 'Mėginukų rinkinys vyrams — 8 × 2 ml',
+    inspiration: '8 populiariausi vyriški kvapai',
+    category: 'meginukai',
+    audience: 'Vyrams',
+    price: 19,
+    compareAt: 29,
+    stock: 18,
+    badge: null,
+    rating: 4.8,
+    reviewsCount: 512,
+    popularity: 89,
+    season: 'Išbandymui ir kelionėms',
+    tagline: 'Nuo gaivių citrusų iki dūmingo oud — raskite savo parašą.',
+    description:
+      'Aštuoni vyriški Vaidore kvapai po 2 ml: nuo lengvų dieninių kompozicijų biurui iki sodrių vakarinių. Patogūs buteliukai telpa į kišenę, o rinkinio kainą atskaitysime, kai pasirinksite pilną flakoną.',
+    includes: ['N° 33 — Oud Wood', 'N° 12 — Tobacco Vanille', 'N° 07 — Santal 33', '+ 5 klasikiniai vyriški kvapai'],
+    notes: {
+      top: ['Kardamonas', 'Greipfrutas', 'Rožmedis'],
+      heart: ['Agaro mediena', 'Vetiveris', 'Irisas'],
+      base: ['Tonkos pupelės', 'Oda', 'Sandalmedis'],
+    },
+    image: unsplash(PHOTO.perfumeGrey),
+    createdAt: '2026-09-01T09:00:00.000Z',
+  },
+  {
+    id: 'samples-unisex',
+    code: 'Mėginukai',
+    name: 'Unisex mėginukų rinkinys — 8 × 2 ml',
+    inspiration: '8 nišiniai unisex kvapai',
+    category: 'meginukai',
+    audience: 'Unisex',
+    price: 19,
+    compareAt: 29,
+    stock: 4,
+    badge: 'new',
+    rating: 4.9,
+    reviewsCount: 203,
+    popularity: 85,
+    season: 'Išbandymui ir kelionėms',
+    tagline: 'Nišinių kvapų pasaulis — be įsipareigojimų.',
+    description:
+      'Rinkinys smalsiems: aštuoni unisex kvapai po 2 ml, įkvėpti nišinių parfumerijos namų. Šafranas, sandalmedis, figos, smilkalai — išbandykite, kas tinka būtent jūsų odai.',
+    includes: ['N° 40 — Baccarat Rouge 540', 'N° 07 — Santal 33', 'N° 12 — Tobacco Vanille', '+ 5 nišiniai kvapai'],
+    notes: {
+      top: ['Šafranas', 'Figų lapai', 'Kardamonas'],
+      heart: ['Ambrinė mediena', 'Sandalmedis', 'Irisas'],
+      base: ['Smilkalai', 'Eglių derva', 'Muskusas'],
+    },
+    image: unsplash(PHOTO.perfumePlant),
+    createdAt: '2026-10-25T09:00:00.000Z',
+  },
+  {
+    id: 'set-signature',
+    code: 'Rinkinys',
+    name: 'Dovanų rinkinys „Parašas“ — 3 × 10 ml',
+    inspiration: 'N° 05 · N° 12 · N° 40',
+    category: 'rinkiniai',
+    audience: 'Unisex',
+    price: 45,
+    compareAt: 57,
+    stock: 9,
+    badge: 'bestseller',
+    rating: 4.9,
+    reviewsCount: 388,
+    popularity: 92,
+    season: 'Dovana',
+    tagline: 'Trys kultiniai kvapai elegantiškoje dovanų dėžutėje.',
+    description:
+      'Rinkinys „Parašas“ — trys populiariausi Vaidore kvapai po 10 ml: N° 05, N° 12 ir N° 40. Supakuota juodoje dovanų dėžutėje su atviruku, kurį užpildysime jūsų žodžiais. Tobula dovana tiems, kurie dar ieško savo kvapo.',
+    includes: ['N° 05 — Libre, 10 ml', 'N° 12 — Tobacco Vanille, 10 ml', 'N° 40 — Baccarat Rouge 540, 10 ml'],
+    notes: {
+      top: ['Levanda', 'Šafranas', 'Tabako lapai'],
+      heart: ['Jazminas', 'Ambrinė mediena', 'Kakava'],
+      base: ['Vanilė', 'Ambra', 'Kedras'],
+    },
+    image: unsplash(PHOTO.perfumeBlackGold),
+    createdAt: '2026-10-10T09:00:00.000Z',
+  },
+  {
+    id: 'set-home',
+    code: 'Rinkinys',
+    name: 'Namų ritualo rinkinys — difuzorius ir žvakė',
+    inspiration: 'Atelier N° 1 · Lumière N° 3',
+    category: 'rinkiniai',
+    audience: 'Namams',
+    price: 65,
+    compareAt: 87,
+    stock: 6,
+    badge: null,
+    rating: 4.8,
+    reviewsCount: 141,
+    popularity: 72,
+    season: 'Dovana namams',
+    tagline: 'Jūros gaiva dienai ir rožių šiluma vakarui.',
+    description:
+      'Atelier N° 1 difuzorius (200 ml) ir Lumière N° 3 žvakė (180 g) vienoje dovanų dėžutėje. Dieną namus gaivins jūros druskos ir šalavijo natos, o vakare — juodųjų serbentų ir rožės šiluma.',
+    includes: ['Atelier N° 1 difuzorius, 200 ml', 'Lumière N° 3 žvakė, 180 g'],
+    notes: {
+      top: ['Jūros druska', 'Juodųjų serbentų lapai'],
+      heart: ['Šalavijas', 'Bulgarijos rožė'],
+      base: ['Raudonieji dumbliai', 'Muskusas'],
+    },
+    image: unsplash(PHOTO.diffuserSpa),
+    createdAt: '2026-10-05T09:00:00.000Z',
+  },
+]
+
+// Antra nuotrauka, rodoma užvedus pelę ant kortelės
+const ALT_IMAGES = {
+  'n05-libre': PHOTO.oilDropperWood,
+  'n12-tobacco': PHOTO.candleDark,
+  'n40-rouge': PHOTO.perfumeReflections,
+  'n21-orchid': PHOTO.candlesWhiteOnBlack,
+  'n33-oud': PHOTO.diffuserInterior,
+  'n07-santal': PHOTO.perfumeTable,
+  'atelier-01': PHOTO.diffuserTray,
+  'atelier-04': PHOTO.diffuserInterior,
+  'lumiere-03': PHOTO.candleDark,
+  'lumiere-08': PHOTO.candleVase,
+  'essence-05': PHOTO.perfumeClearBlackCap,
+  'essence-40': PHOTO.perfumePlant,
+  'samples-women': PHOTO.perfumeClearBlackCap,
+  'samples-men': PHOTO.perfumeBlackGold,
+  'samples-unisex': PHOTO.perfumeReflections,
+  'set-signature': PHOTO.perfumeGrey,
+  'set-home': PHOTO.candleVase,
+}
+
+// Išpardavimo prekės (mažesnė kaina, rodoma skiltyje „Išpardavimas“)
+const CLEARANCE = {
+  'n33-oud': { price: 49, compareAt: 85, clearance: true },
+  'lumiere-08': { price: 27, compareAt: 50, clearance: true },
+}
+
+// Pradinis katalogas. Administratoriaus panelėje pridėtos prekės
+// įrašomos į tą patį masyvą (išsaugoma naršyklės localStorage).
+export const SEED_PRODUCTS = [...SET_PRODUCTS, ...BASE_PRODUCTS].map((product) => ({
+  ...product,
+  imageAlt: ALT_IMAGES[product.id] ? unsplash(ALT_IMAGES[product.id]) : null,
+  clearance: false,
+  ...CLEARANCE[product.id],
+}))

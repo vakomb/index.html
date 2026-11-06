@@ -50,7 +50,7 @@ export default function AddToCartButton({
       onClick={handleClick}
       disabled={soldOut}
       aria-live="polite"
-      className={`relative inline-flex select-none items-center justify-center gap-2 overflow-hidden rounded-full font-medium transition-all duration-300 ease-ios active:scale-[0.97] ${SIZES[size]} ${visual} ${className}`}
+      className={`relative inline-flex select-none items-center justify-center gap-2 overflow-hidden rounded-lg font-semibold transition-all duration-300 ease-ios active:scale-[0.97] ${SIZES[size]} ${visual} ${className}`}
     >
       <span
         className={`inline-flex items-center gap-2 transition-all duration-300 ease-ios ${

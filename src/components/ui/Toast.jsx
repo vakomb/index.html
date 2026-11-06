@@ -3,7 +3,7 @@ import { Check, X } from 'lucide-react'
 import { usePresence } from '../../hooks/usePresence.js'
 import SmartImage from './SmartImage.jsx'
 
-export default function Toast({ toast, onDismiss }) {
+export default function Toast({ toast, onDismiss, position = 'bottom' }) {
   const { mounted, visible } = usePresence(Boolean(toast), 300)
   const [shown, setShown] = useState(toast)
 
@@ -14,12 +14,18 @@ export default function Toast({ toast, onDismiss }) {
   if (!mounted || !shown) return null
 
   return (
-    <div className="pointer-events-none fixed inset-x-0 bottom-[calc(5.25rem+env(safe-area-inset-bottom))] z-[70] flex justify-center px-4 md:bottom-6">
+    <div
+      className={`pointer-events-none fixed inset-x-0 z-[70] flex justify-center px-4 ${
+        position === 'top'
+          ? 'top-[calc(0.75rem+env(safe-area-inset-top))]'
+          : 'bottom-[calc(5.25rem+env(safe-area-inset-bottom))] md:bottom-6'
+      }`}
+    >
       <div
         role="status"
         aria-live="polite"
         className={`pointer-events-auto flex w-full max-w-sm items-center gap-3 rounded-2xl bg-black p-2.5 pr-3 text-white shadow-2xl shadow-black/20 transition-all duration-300 ease-ios ${
-          visible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
+          visible ? 'translate-y-0 opacity-100' : position === 'top' ? '-translate-y-4 opacity-0' : 'translate-y-4 opacity-0'
         }`}
       >
         {shown.image ? (

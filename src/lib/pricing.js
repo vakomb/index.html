@@ -6,6 +6,7 @@ import {
   SHIPPING_METHODS,
   VAT_RATE,
 } from '../data/catalog.js'
+import { formatEUR } from './format.js'
 
 export const round2 = (value) => Math.round(value * 100) / 100
 
@@ -33,6 +34,22 @@ export function getDefaultSize(product) {
 
 export function getSize(product, sizeId) {
   return getSizes(product).find((size) => size.id === sizeId) ?? getDefaultSize(product)
+}
+
+// Pigiausia talpa — kortelėse rodoma kaip „nuo X €“
+export function getFromSize(product) {
+  const sizes = getSizes(product)
+  return sizes.reduce((min, size) => (size.price < min.price ? size : min), sizes[0])
+}
+
+export function hasMultipleSizes(product) {
+  return getSizes(product).length > 1
+}
+
+// Kaina už 100 ml arba 100 g (ES kainų nurodymo reikalavimas)
+export function unitPriceLabel(size) {
+  if (!size?.amount || !size?.unit) return null
+  return `${formatEUR((size.price / size.amount) * 100)} / 100 ${size.unit}`
 }
 
 export function discountPercent(price, compareAt) {

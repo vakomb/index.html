@@ -40,7 +40,7 @@ export default function SuccessView({ order, onNavigate }) {
         <button
           type="button"
           onClick={() => onNavigate('shop')}
-          className="mt-7 h-12 rounded-full bg-black px-7 text-sm font-medium text-white"
+          className="mt-7 h-12 rounded-lg bg-black px-7 text-sm font-medium text-white"
         >
           Į parduotuvę
         </button>
@@ -152,14 +152,14 @@ export default function SuccessView({ order, onNavigate }) {
         <button
           type="button"
           onClick={() => onNavigate('shop')}
-          className="flex h-13 flex-1 items-center justify-center gap-2 rounded-full bg-black text-[15px] font-medium text-white transition hover:bg-gray-800 active:scale-[0.98]"
+          className="flex h-13 flex-1 items-center justify-center gap-2 rounded-lg bg-black text-[15px] font-medium text-white transition hover:bg-gray-800 active:scale-[0.98]"
         >
           Tęsti apsipirkimą <ArrowRight size={16} aria-hidden="true" />
         </button>
         <button
           type="button"
           onClick={() => onNavigate('admin')}
-          className="flex h-13 flex-1 items-center justify-center rounded-full border border-gray-200 text-[15px] font-medium transition hover:border-black"
+          className="flex h-13 flex-1 items-center justify-center rounded-lg border border-gray-200 text-[15px] font-medium transition hover:border-black"
         >
           Peržiūrėti Admin panelėje
         </button>

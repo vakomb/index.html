@@ -3,6 +3,18 @@
 Prabangių alternatyvių kvepalų, namų kvapų, žvakių ir aliejinių koncentratų e-parduotuvės prototipas.
 React 19 + Vite + Tailwind CSS v4 + Lucide ikonos. Visa sąsaja — lietuvių kalba, pirmiausia pritaikyta mobiliesiems.
 
+## Funkcijos
+
+- Reklaminė karuselė, privalumų juosta, kategorijų plytelės, naujienų, populiariausių (moterims / vyrams / unisex) ir išpardavimo karuselės
+- Meniu pagal lytį ir kategorijas: kvepalai, mėginukų rinkiniai (8 × 2 ml), dovanų rinkiniai, namų kvapai, aliejai, žvakės, išpardavimas
+- Paieška su gyvais rezultatais, filtrai (kategorija, lytis, kaina, išpardavimas) ir rikiavimas
+- Kortelės su „nuo“ kaina, kaina už 100 ml / 100 g, antra nuotrauka užvedus pelę ir greitu dydžio pasirinkimu
+- Prekės langas: dydžiai, kvapo piramidė, sudėtis, rinkinio turinys, atsiliepimai
+- Krepšelis su nemokamo pristatymo juosta ir papildomo pardavimo bloku, 3 žingsnių atsiskaitymas, nuolaidos kodas `VAIDORE10`
+- Paskyra (prisijungimas, užsakymų istorija), naujienlaiškio prenumerata, šalies pasirinkimas
+- Puslapiai: Apie mus, Atsiliepimai, Tinklaraštis, Kontaktai, Partneriams, Pristatymas, Grąžinimas, Pirkimo taisyklės, Privatumas
+- Admin panelė: KPI, apyvartos diagrama, prekių kūrimas ir trynimas, atsargos
+
 ## Paleidimas kompiuteryje
 
 Reikia Node.js 20.19 arba naujesnės versijos.
@@ -60,8 +72,10 @@ Mygtukas „Atkurti demo duomenis“ grąžina pradinę būseną.
 
 - **Mokėjimai** yra simuliuoti. Prijunkite tikrą Stripe Checkout arba Payment Element per serverį
   (pvz., Vercel funkciją) — kortelių duomenų niekada nerinkite patys.
-- **Admin panelė** neturi prisijungimo ir duomenų bazės — tai demonstracija. Gyvai parduotuvei reikia
-  backend'o (pvz., Supabase) ir autentifikacijos.
+- **Admin panelė ir paskyros** neturi tikro prisijungimo ir duomenų bazės — tai demonstracija. Gyvai parduotuvei
+  reikia backend'o (pvz., Supabase) ir autentifikacijos.
+- **Taisyklių puslapiai** (`src/data/pages.js`) — šablonai: įrašykite įmonės rekvizitus vietoje `[laužtinių skliaustų]`
+  ir peržiūrėkite tekstus su teisininku.
 - **Atsiliepimai ir analitika** — demonstraciniai. ES Omnibus direktyva draudžia netikrus atsiliepimus,
   o perbraukta „sena kaina“ turi būti mažiausia kaina per paskutines 30 dienų.
 - **Prekių ženklai** (Tom Ford, YSL ir kt.) naudojami tik kvapų profiliams apibūdinti; tai nurodyta

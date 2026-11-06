@@ -88,10 +88,10 @@ function BrandMark({ brand, active }) {
   )
 }
 
-export default function CheckoutView({ lines, onPlaceOrder, onBackToCart, onNavigate }) {
+export default function CheckoutView({ lines, onPlaceOrder, onBackToCart, onNavigate, defaults = {} }) {
   const [step, setStep] = useState(0)
   const [completed, setCompleted] = useState([])
-  const [form, setForm] = useState(INITIAL_FORM)
+  const [form, setForm] = useState(() => ({ ...INITIAL_FORM, ...defaults }))
   const [errors, setErrors] = useState({})
   const [promoCode, setPromoCode] = useState(null)
   const [processing, setProcessing] = useState(false)
@@ -208,12 +208,12 @@ export default function CheckoutView({ lines, onPlaceOrder, onBackToCart, onNavi
         <div className="mx-auto flex size-20 items-center justify-center rounded-full bg-mist">
           <ShoppingBag size={30} strokeWidth={1.25} aria-hidden="true" />
         </div>
-        <h1 className="mt-6 font-serif text-4xl">Krepšelis tuščias</h1>
+        <h1 className="mt-6 text-3xl font-extrabold tracking-tight">Krepšelis tuščias</h1>
         <p className="mt-2 text-sm text-gray-500">Pridėkite bent vieną kvapą, kad galėtumėte atsiskaityti.</p>
         <button
           type="button"
           onClick={() => onNavigate('shop')}
-          className="mt-7 h-12 rounded-full bg-black px-7 text-sm font-medium text-white"
+          className="mt-7 h-12 rounded-lg bg-black px-7 text-sm font-medium text-white"
         >
           Į parduotuvę
         </button>
@@ -247,7 +247,7 @@ export default function CheckoutView({ lines, onPlaceOrder, onBackToCart, onNavi
       </button>
 
       <div className="mt-4 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-        <h1 className="font-serif text-4xl font-medium tracking-tight md:text-5xl">Atsiskaitymas</h1>
+        <h1 className="text-[30px] font-extrabold tracking-tight md:text-[38px]">Atsiskaitymas</h1>
         <ol className="flex items-center gap-2 text-[12px]" aria-label="Atsiskaitymo eiga">
           {STEP_TITLES.map((title, index) => {
             const done = completed.includes(index) && step !== index
@@ -283,7 +283,7 @@ export default function CheckoutView({ lines, onPlaceOrder, onBackToCart, onNavi
           <span className="text-[15px] font-semibold tabular-nums">{formatEUR(totals.total)}</span>
         </button>
         <div
-          className={`grid transition-[grid-template-rows] duration-500 ease-ios ${
+          className={`grid grid-cols-1 transition-[grid-template-rows] duration-500 ease-ios ${
             summaryOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
           }`}
         >
@@ -295,7 +295,7 @@ export default function CheckoutView({ lines, onPlaceOrder, onBackToCart, onNavi
         </div>
       </div>
 
-      <div className="mt-6 grid gap-8 lg:grid-cols-[1fr_400px] lg:gap-12">
+      <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-[1fr_400px] lg:gap-12">
         <form onSubmit={pay} noValidate className="space-y-3">
           <fieldset disabled={processing} className="space-y-3">
             <CheckoutStep
@@ -346,7 +346,7 @@ export default function CheckoutView({ lines, onPlaceOrder, onBackToCart, onNavi
                 <button
                   type="button"
                   onClick={() => goNext(0)}
-                  className="h-12 rounded-full bg-black text-[15px] font-medium text-white transition hover:bg-gray-800 active:scale-[0.98]"
+                  className="h-12 rounded-lg bg-black text-[15px] font-medium text-white transition hover:bg-gray-800 active:scale-[0.98]"
                 >
                   Tęsti į pristatymą
                 </button>
@@ -454,7 +454,7 @@ export default function CheckoutView({ lines, onPlaceOrder, onBackToCart, onNavi
                 <button
                   type="button"
                   onClick={() => goNext(1)}
-                  className="h-12 rounded-full bg-black text-[15px] font-medium text-white transition hover:bg-gray-800 active:scale-[0.98]"
+                  className="h-12 rounded-lg bg-black text-[15px] font-medium text-white transition hover:bg-gray-800 active:scale-[0.98]"
                 >
                   Tęsti į mokėjimą
                 </button>
@@ -544,7 +544,7 @@ export default function CheckoutView({ lines, onPlaceOrder, onBackToCart, onNavi
 
               <button
                 type="submit"
-                className="mt-5 flex h-14 w-full items-center justify-center gap-2.5 rounded-full bg-black text-[16px] font-medium text-white shadow-xl shadow-black/15 transition hover:bg-gray-800 active:scale-[0.98] disabled:cursor-wait disabled:bg-gray-800"
+                className="mt-5 flex h-14 w-full items-center justify-center gap-2.5 rounded-lg bg-black text-[16px] font-medium text-white shadow-xl shadow-black/15 transition hover:bg-gray-800 active:scale-[0.98] disabled:cursor-wait disabled:bg-gray-800"
               >
                 {processing ? (
                   <>

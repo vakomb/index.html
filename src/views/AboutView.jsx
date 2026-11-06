@@ -37,8 +37,8 @@ export default function AboutView({ onNavigate }) {
     <article>
       <header className="mx-auto max-w-5xl px-4 pt-12 text-center md:px-8 md:pt-20">
         <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-gray-500">Apie mus · Vaidore.com</p>
-        <h1 className="mt-5 font-serif text-[46px] font-medium leading-[0.98] tracking-tight text-balance md:text-[92px]">
-          Mes kuriame kvapus, kurie <em className="italic text-gray-500">atlaiko dieną.</em>
+        <h1 className="mt-5 font-serif text-[38px] font-semibold leading-[1.02] tracking-tight text-balance md:text-[68px]">
+          Mes kuriame kvapus, kurie <em className="text-gray-500">atlaiko dieną.</em>
         </h1>
         <p className="mx-auto mt-7 max-w-2xl text-[16px] leading-relaxed text-gray-600 md:text-lg">
           Vaidore gimė iš paprasto klausimo: kodėl už kvapą, kuris išgaruoja iki pietų, turėtume mokėti už prekės ženklą?
@@ -97,14 +97,14 @@ export default function AboutView({ onNavigate }) {
       </section>
 
       <section className="mx-auto mt-16 max-w-4xl px-4 text-center md:mt-24 md:px-8">
-        <blockquote className="font-serif text-[32px] italic leading-[1.15] text-black md:text-[54px]">
+        <blockquote className="font-serif text-[26px] font-medium leading-[1.25] text-black md:text-[40px]">
           „Kvapas yra vienintelis drabužis, kurio niekas nepamato, bet visi prisimena.“
         </blockquote>
         <p className="mt-5 text-[12px] uppercase tracking-[0.22em] text-gray-500">Vaidore kvapų laboratorija</p>
         <button
           type="button"
           onClick={() => onNavigate('shop')}
-          className="mt-10 inline-flex h-13 items-center gap-2 rounded-full bg-black px-8 text-[15px] font-medium text-white transition hover:bg-gray-800 active:scale-[0.97]"
+          className="mt-10 inline-flex h-13 items-center gap-2 rounded-lg bg-black px-8 text-[15px] font-medium text-white transition hover:bg-gray-800 active:scale-[0.97]"
         >
           Atrasti kolekciją <ArrowRight size={16} aria-hidden="true" />
         </button>

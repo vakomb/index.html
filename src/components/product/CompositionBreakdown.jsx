@@ -46,7 +46,7 @@ export default function CompositionBreakdown({ composition, inci }) {
         Visa INCI sudėtis
         <ChevronDown size={16} className={`transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
       </button>
-      <div className={`grid transition-[grid-template-rows] duration-500 ease-ios ${open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
+      <div className={`grid grid-cols-1 transition-[grid-template-rows] duration-500 ease-ios ${open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
         <div className="overflow-hidden">
           <p className="px-4 pt-3 text-xs leading-relaxed text-gray-500">{inci}</p>
         </div>
