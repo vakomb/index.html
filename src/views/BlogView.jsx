@@ -13,7 +13,7 @@ export default function BlogView({ onShop }) {
   return (
     <div className="mx-auto max-w-6xl px-4 pt-6 md:px-8 md:pt-10">
       <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-gray-500">Tinklaraštis</p>
-      <h1 className="mt-2 text-[30px] font-extrabold tracking-tight md:text-[40px]">Kvapų žurnalas</h1>
+      <h1 className="mt-2 text-[40px] font-medium leading-none tracking-[-0.02em] md:text-[60px]">Kvapų žurnalas</h1>
       <p className="mt-3 max-w-2xl text-[16px] text-gray-600">Patarimai, kaip išsirinkti, nešioti ir išsaugoti kvapą.</p>
 
       <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">

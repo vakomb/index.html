@@ -16,19 +16,19 @@ export default function MobileMenu({ open, onClose, onShop, onNavigate, onOpenAc
   }
 
   return (
-    <div className="fixed inset-0 z-[60] md:hidden" role="dialog" aria-modal="true" aria-label="Meniu">
+    <div className="fixed inset-0 z-[60] xl:hidden" role="dialog" aria-modal="true" aria-label="Meniu">
       <div
         className={`absolute inset-0 bg-black/40 transition-opacity duration-400 ${visible ? 'opacity-100' : 'opacity-0'}`}
         onClick={onClose}
         aria-hidden="true"
       />
       <aside
-        className={`absolute inset-y-0 left-0 flex w-[86%] max-w-sm flex-col bg-white shadow-2xl transition-transform duration-400 ease-ios ${
+        className={`absolute inset-y-0 left-0 flex w-[88%] max-w-md flex-col bg-white shadow-2xl transition-transform duration-400 ease-ios ${
           visible ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         <div className="flex items-center justify-between border-b border-gray-100 px-4 pb-3 pt-[calc(0.75rem+env(safe-area-inset-top))]">
-          <Logo size="sm" />
+          <Logo size="lg" />
           <button
             type="button"
             onClick={onClose}
@@ -57,14 +57,14 @@ export default function MobileMenu({ open, onClose, onShop, onNavigate, onOpenAc
             <ChevronRight size={16} className="text-gray-400" />
           </button>
 
-          <p className="px-4 pb-1 pt-5 text-[11px] font-bold uppercase tracking-[0.14em] text-gray-400">Parduotuvė</p>
+          <p className="px-5 pb-1 pt-6 text-[13px] font-medium text-gray-400">Parduotuvė</p>
           <ul>
             {MAIN_NAV.map((item) => (
               <li key={item.id}>
                 <button
                   type="button"
                   onClick={() => go(() => onShop(item.filter))}
-                  className={`flex w-full items-center justify-between px-4 py-3 text-left text-[15px] font-semibold ${
+                  className={`flex w-full items-center justify-between px-5 py-3 text-left text-[20px] font-medium tracking-[-0.01em] ${
                     item.accent ? 'text-sale' : 'text-black'
                   }`}
                 >
@@ -75,14 +75,14 @@ export default function MobileMenu({ open, onClose, onShop, onNavigate, onOpenAc
             ))}
           </ul>
 
-          <p className="px-4 pb-1 pt-5 text-[11px] font-bold uppercase tracking-[0.14em] text-gray-400">Vaidore</p>
+          <p className="px-5 pb-1 pt-8 text-[13px] font-medium text-gray-400">Vaidore</p>
           <ul>
             {[...SECONDARY_NAV, ...POLICY_NAV].map((item) => (
               <li key={item.route}>
                 <button
                   type="button"
                   onClick={() => go(() => onNavigate(item.route))}
-                  className="flex w-full px-4 py-2.5 text-left text-[14px] text-gray-700"
+                  className="flex w-full px-5 py-2.5 text-left text-[16px] text-gray-600"
                 >
                   {item.label}
                 </button>

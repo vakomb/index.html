@@ -149,7 +149,7 @@ export default function ProductDetail({ product, onClose, onAdd, onBuyNow, inCar
               <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-gray-500">
                 {category?.label} · {shown.audience}
               </p>
-              <h2 className="mt-2 text-[26px] font-extrabold leading-tight tracking-tight md:text-[34px]">
+              <h2 className="mt-2 text-[30px] font-medium leading-[1.1] tracking-[-0.02em] md:text-[44px]">
                 {shown.name}
               </h2>
               <p className="mt-2 text-[13px] text-gray-500">
@@ -171,10 +171,10 @@ export default function ProductDetail({ product, onClose, onAdd, onBuyNow, inCar
                 </button>
               )}
 
-              <p className="mt-4 text-[16px] leading-snug text-gray-600">{shown.tagline}</p>
+              <p className="mt-5 text-[18px] leading-snug text-gray-600 md:text-[20px]">{shown.tagline}</p>
 
               <div className="mt-6 flex flex-wrap items-end gap-x-3 gap-y-2">
-                <span className="text-3xl font-semibold tabular-nums tracking-tight">{formatEUR(size.price)}</span>
+                <span className="text-[34px] font-medium tabular-nums tracking-[-0.02em]">{formatEUR(size.price)}</span>
                 {size.compareAt > size.price && (
                   <span className="pb-1 text-base tabular-nums text-gray-400 line-through">{formatEUR(size.compareAt)}</span>
                 )}
@@ -321,7 +321,7 @@ export default function ProductDetail({ product, onClose, onAdd, onBuyNow, inCar
                 <h3 id="about-scent" className="text-[15px] font-semibold">
                   Apie kvapą
                 </h3>
-                <p className="mt-2 text-[15px] leading-relaxed text-gray-700">{shown.description}</p>
+                <p className="mt-3 text-[17px] leading-relaxed text-gray-700">{shown.description}</p>
                 {shown.season && (
                   <p className="mt-3 text-[13px] text-gray-500">
                     Geriausiai tinka: <span className="text-gray-800">{shown.season}</span>

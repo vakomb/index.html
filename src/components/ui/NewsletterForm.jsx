@@ -52,7 +52,7 @@ export default function NewsletterForm({ tone = 'light', subscribed, onSubscribe
             setError(null)
           }}
           placeholder="Jūsų el. paštas"
-          className={`h-12 w-0 min-w-0 flex-1 rounded-lg px-4 text-base outline-none transition md:text-[14px] ${
+          className={`h-14 w-0 min-w-0 flex-1 rounded-lg px-5 text-base outline-none transition md:text-[16px] ${
             dark
               ? 'border border-white/15 bg-white/5 text-white placeholder:text-white/40 focus:border-white'
               : 'border border-gray-200 bg-white text-black placeholder:text-gray-400 focus:border-black'
@@ -60,7 +60,7 @@ export default function NewsletterForm({ tone = 'light', subscribed, onSubscribe
         />
         <button
           type="submit"
-          className={`h-12 shrink-0 rounded-lg px-5 text-[14px] font-semibold transition active:scale-[0.97] ${
+          className={`h-14 shrink-0 rounded-lg px-7 text-[16px] font-medium transition active:scale-[0.97] ${
             dark ? 'bg-white text-black hover:bg-gray-100' : 'bg-black text-white hover:bg-gray-800'
           }`}
         >
@@ -68,7 +68,7 @@ export default function NewsletterForm({ tone = 'light', subscribed, onSubscribe
         </button>
       </div>
       {error && <p className={`mt-2 text-xs ${dark ? 'text-red-300' : 'text-red-600'}`}>{error}</p>}
-      <p className={`mt-2 text-[11px] ${dark ? 'text-white/40' : 'text-gray-500'}`}>
+      <p className={`mt-3 text-[13px] ${dark ? 'text-white/40' : 'text-gray-500'}`}>
         Prenumeruodami sutinkate su privatumo politika. Atsisakyti galite bet kada.
       </p>
     </form>

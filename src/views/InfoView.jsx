@@ -69,7 +69,7 @@ export default function InfoView({ route, onNavigate }) {
       <div className={isPolicy ? 'md:grid md:grid-cols-[220px_1fr] md:gap-12' : ''}>
         {isPolicy && (
           <aside className="mb-6 md:mb-0" aria-label="Informacija">
-            <ul className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 md:sticky md:top-[132px] md:mx-0 md:flex-col md:gap-1 md:px-0">
+            <ul className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 md:sticky md:top-28 md:mx-0 md:flex-col md:gap-1 md:px-0">
               {POLICY_NAV.map((item) => (
                 <li key={item.route} className="shrink-0">
                   <button
@@ -90,8 +90,8 @@ export default function InfoView({ route, onNavigate }) {
 
         <article className="max-w-3xl">
           <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-gray-500">{page.eyebrow}</p>
-          <h1 className="mt-2 text-[30px] font-extrabold tracking-tight md:text-[40px]">{page.title}</h1>
-          <p className="mt-3 text-[16px] leading-relaxed text-gray-600">{page.intro}</p>
+          <h1 className="mt-2 text-[40px] font-medium leading-none tracking-[-0.02em] md:text-[60px]">{page.title}</h1>
+          <p className="mt-6 text-[18px] leading-relaxed text-gray-600">{page.intro}</p>
 
           {page.contacts && (
             <dl className="mt-8 grid gap-3 sm:grid-cols-2">
@@ -106,8 +106,8 @@ export default function InfoView({ route, onNavigate }) {
 
           {page.sections?.map((section) => (
             <section key={section.title} className="mt-8">
-              <h2 className="text-[18px] font-extrabold tracking-tight">{section.title}</h2>
-              {section.text && <p className="mt-2 text-[15px] leading-relaxed text-gray-700">{section.text}</p>}
+              <h2 className="text-[22px] font-medium tracking-[-0.01em]">{section.title}</h2>
+              {section.text && <p className="mt-3 text-[17px] leading-relaxed text-gray-700">{section.text}</p>}
               {section.list && (
                 <ol className="mt-3 list-decimal space-y-2 pl-5 text-[15px] leading-relaxed text-gray-700">
                   {section.list.map((item) => (

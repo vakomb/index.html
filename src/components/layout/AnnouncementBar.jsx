@@ -1,28 +1,28 @@
-import { Sparkle } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { TICKER_MESSAGES } from '../../data/catalog.js'
 
+// Minimalistinė juosta: viena žinutė vienu metu, švelniai keičiasi kas 4 s.
 export default function AnnouncementBar() {
-  const items = [...TICKER_MESSAGES, ...TICKER_MESSAGES]
+  const [index, setIndex] = useState(0)
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setIndex((current) => (current + 1) % TICKER_MESSAGES.length), 4200)
+    return () => window.clearInterval(timer)
+  }, [])
 
   return (
-    <div className="relative h-9 overflow-hidden bg-black text-white" role="region" aria-label="Akcijos ir naujienos">
-      <p className="sr-only">{TICKER_MESSAGES.join('. ')}</p>
-      <div
-        className="flex h-full w-max animate-marquee items-center hover:[animation-play-state:paused]"
-        aria-hidden="true"
-      >
-        {items.map((message, index) => (
-          <span
-            key={`${message}-${index}`}
-            className="flex items-center gap-6 whitespace-nowrap px-6 text-[10px] font-medium uppercase tracking-[0.2em] md:text-[11px]"
-          >
-            {message}
-            <Sparkle size={10} className="fill-white/70 text-white/70" />
-          </span>
-        ))}
-      </div>
-      <div className="pointer-events-none absolute inset-y-0 left-0 w-10 bg-linear-to-r from-black to-transparent" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-linear-to-l from-black to-transparent" />
+    <div className="relative flex h-10 items-center justify-center overflow-hidden bg-black px-4 text-white" role="region" aria-label="Akcijos">
+      {TICKER_MESSAGES.map((message, messageIndex) => (
+        <p
+          key={message}
+          aria-hidden={messageIndex !== index}
+          className={`absolute inset-x-4 truncate text-center text-[12px] font-medium tracking-[0.04em] transition-all duration-700 ease-ios md:text-[13px] ${
+            messageIndex === index ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0'
+          }`}
+        >
+          {message}
+        </p>
+      ))}
     </div>
   )
 }

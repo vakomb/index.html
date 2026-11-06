@@ -22,11 +22,11 @@ export default function ReviewsView({ products, onOpenProduct }) {
   return (
     <div className="mx-auto max-w-6xl px-4 pt-6 md:px-8 md:pt-10">
       <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-gray-500">Atsiliepimai</p>
-      <h1 className="mt-2 text-[30px] font-extrabold tracking-tight md:text-[40px]">Ką sako mūsų pirkėjai</h1>
+      <h1 className="mt-2 text-[40px] font-medium leading-none tracking-[-0.02em] md:text-[60px]">Ką sako mūsų pirkėjai</h1>
 
       <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-[300px_1fr]">
         <aside>
-          <div className="rounded-xl bg-mist p-6 md:sticky md:top-[132px]">
+          <div className="rounded-xl bg-mist p-6 md:sticky md:top-28">
             <p className="text-[56px] font-extrabold leading-none tracking-tight">4,9</p>
             <Stars rating={5} size={16} className="mt-2" />
             <p className="mt-2 text-[13px] text-gray-600">

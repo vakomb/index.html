@@ -1,8 +1,8 @@
 import { useRef } from 'react'
-import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
 import ProductCard from './ProductCard.jsx'
 
-export default function ProductCarousel({ title, eyebrow, products, onOpen, onAdd, onViewAll, accent = false, tabs }) {
+export default function ProductCarousel({ title, products, onOpen, onAdd, onViewAll, accent = false, tabs }) {
   const trackRef = useRef(null)
 
   const scrollBy = (direction) => {
@@ -14,43 +14,36 @@ export default function ProductCarousel({ title, eyebrow, products, onOpen, onAd
   if (products.length === 0) return null
 
   return (
-    <section className="mx-auto max-w-7xl px-4 md:px-8" aria-label={title}>
+    <section className="mx-auto max-w-[1440px] px-5 md:px-10" aria-label={title}>
       <div className="flex items-end justify-between gap-4">
-        <div className="min-w-0">
-          {eyebrow && (
-            <p className={`text-[11px] font-bold uppercase tracking-[0.14em] ${accent ? 'text-sale' : 'text-gray-500'}`}>
-              {eyebrow}
-            </p>
-          )}
-          <h2 className={`mt-1 text-[22px] font-extrabold tracking-tight md:text-[28px] ${accent ? 'text-sale' : 'text-black'}`}>
-            {title}
-          </h2>
-        </div>
-        <div className="flex shrink-0 items-center gap-1">
+        <h2 className={`text-[32px] font-medium leading-none tracking-[-0.02em] md:text-[48px] ${accent ? 'text-sale' : 'text-black'}`}>
+          {title}
+        </h2>
+        <div className="flex shrink-0 items-center gap-2">
           {onViewAll && (
             <button
               type="button"
               onClick={onViewAll}
-              className="mr-2 inline-flex items-center gap-1 text-[13px] font-bold underline-offset-4 hover:underline"
+              className="text-[15px] font-medium underline decoration-black/20 underline-offset-[6px] transition hover:decoration-black md:mr-4"
             >
-              Žiūrėti visus <ArrowRight size={14} aria-hidden="true" />
+              Žiūrėti visus
             </button>
           )}
           <button
             type="button"
             onClick={() => scrollBy(-1)}
             aria-label="Ankstesni"
-            className="hidden size-9 items-center justify-center rounded-full border border-gray-200 transition hover:border-black md:flex"
+            className="hidden size-12 items-center justify-center rounded-full border border-black/10 transition hover:border-black md:flex"
           >
-            <ChevronLeft size={17} />
+            <ArrowLeft size={18} strokeWidth={1.5} />
           </button>
           <button
             type="button"
             onClick={() => scrollBy(1)}
             aria-label="Kiti"
-            className="hidden size-9 items-center justify-center rounded-full border border-gray-200 transition hover:border-black md:flex"
+            className="hidden size-12 items-center justify-center rounded-full border border-black/10 transition hover:border-black md:flex"
           >
-            <ChevronRight size={17} />
+            <ArrowRight size={18} strokeWidth={1.5} />
           </button>
         </div>
       </div>
@@ -59,7 +52,7 @@ export default function ProductCarousel({ title, eyebrow, products, onOpen, onAd
 
       <div
         ref={trackRef}
-        className="no-scrollbar -mx-4 mt-5 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-smooth px-4 pb-2 md:-mx-1 md:gap-5 md:px-1"
+        className="no-scrollbar -mx-5 mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-5 pb-2 md:-mx-1 md:mt-10 md:gap-8 md:px-1"
       >
         {products.map((product, index) => (
           <ProductCard
@@ -68,7 +61,7 @@ export default function ProductCarousel({ title, eyebrow, products, onOpen, onAd
             index={index}
             onOpen={onOpen}
             onAdd={onAdd}
-            className="w-[46%] shrink-0 snap-start sm:w-[31%] lg:w-[calc(25%-15px)]"
+            className="w-[76%] shrink-0 snap-start sm:w-[44%] lg:w-[calc((100%-4rem)/3)]"
           />
         ))}
       </div>

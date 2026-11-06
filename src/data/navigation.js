@@ -12,6 +12,17 @@ export const MAIN_NAV = [
   { id: 'sale', label: 'Išpardavimas', filter: { clearance: true }, accent: true },
 ]
 
+// Kompiuterio antraštėje — trumpesnis, minimalistinis sąrašas
+export const DESKTOP_NAV = [
+  { id: 'women', label: 'Moterims', filter: { audience: 'Moterims' } },
+  { id: 'men', label: 'Vyrams', filter: { audience: 'Vyrams' } },
+  { id: 'unisex', label: 'Unisex', filter: { audience: 'Unisex' } },
+  { id: 'samples', label: 'Mėginukai', filter: { category: 'meginukai' } },
+  { id: 'sets', label: 'Rinkiniai', filter: { category: 'rinkiniai' } },
+  { id: 'home', label: 'Namams', filter: { category: 'namu-kvapai' } },
+  { id: 'sale', label: 'Išpardavimas', filter: { clearance: true }, accent: true },
+]
+
 export const SECONDARY_NAV = [
   { route: 'about', label: 'Apie mus' },
   { route: 'reviews', label: 'Atsiliepimai' },

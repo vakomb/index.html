@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { Check, Flame, ShoppingBag, X } from 'lucide-react'
-import { CATEGORY_BY_ID } from '../../data/catalog.js'
-import { formatEUR, formatNumber } from '../../lib/format.js'
+import { Check, X } from 'lucide-react'
+import { formatEUR } from '../../lib/format.js'
 import {
   discountPercent,
   getFromSize,
@@ -12,39 +11,8 @@ import {
   unitPriceLabel,
 } from '../../lib/pricing.js'
 import SmartImage from '../ui/SmartImage.jsx'
-import Stars from '../ui/Stars.jsx'
 
-function CardBadges({ product, discount }) {
-  const soldOut = isSoldOut(product)
-  return (
-    <div className="absolute left-2 top-2 flex flex-col items-start gap-1">
-      {soldOut && (
-        <span className="rounded-md bg-gray-800 px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-white">
-          Išparduota
-        </span>
-      )}
-      {!soldOut && discount > 0 && (
-        <span className="rounded-md bg-sale px-2 py-1 text-[11px] font-bold tabular-nums text-white">−{discount} %</span>
-      )}
-      {!soldOut && product.badge === 'bestseller' && (
-        <span className="rounded-md bg-black px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-white">
-          Populiariausias
-        </span>
-      )}
-      {!soldOut && product.badge === 'new' && (
-        <span className="rounded-md bg-white px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-black shadow-sm">
-          Naujiena
-        </span>
-      )}
-    </div>
-  )
-}
-
-const shortNotes = (notes) =>
-  [notes.top[0], notes.heart[0], notes.base[0]].filter(Boolean).join(' · ')
-
-// Parduotuvės kortelė: „nuo“ kaina, kaina už 100 ml, antra nuotrauka užvedus pelę
-// ir greitas dydžio pasirinkimas tiesiai kortelėje.
+// Minimalistinė kortelė: didelė nuotrauka, pavadinimas, kaina ir vienas veiksmas.
 export default function ProductCard({ product, onOpen, onAdd, index = 0, className = '' }) {
   const [picking, setPicking] = useState(false)
   const [added, setAdded] = useState(false)
@@ -57,6 +25,7 @@ export default function ProductCard({ product, onOpen, onAdd, index = 0, classNa
   const soldOut = isSoldOut(product)
   const lowStock = isLowStock(product)
   const unitPrice = unitPriceLabel(from)
+  const label = soldOut ? 'Išparduota' : product.badge === 'new' ? 'Naujiena' : product.badge === 'bestseller' ? 'Populiariausias' : null
 
   const confirmAdded = () => {
     setAdded(true)
@@ -87,68 +56,65 @@ export default function ProductCard({ product, onOpen, onAdd, index = 0, classNa
       <button
         type="button"
         onClick={() => onOpen(product.id)}
-        className="relative block overflow-hidden rounded-xl bg-mist text-left outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
+        className="relative block overflow-hidden rounded-md bg-mist text-left outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
         aria-label={`Atidaryti ${product.name}`}
       >
-        <SmartImage src={product.image} alt={product.name} className="aspect-square w-full" />
+        <SmartImage
+          src={product.image}
+          alt={product.name}
+          className="aspect-[4/5] w-full"
+          imgClassName="transition-transform duration-[1200ms] ease-ios group-hover:scale-[1.03]"
+        />
         {product.imageAlt && (
           <SmartImage
             src={product.imageAlt}
             alt=""
-            className="absolute! inset-0 aspect-square w-full opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+            className="absolute! inset-0 aspect-[4/5] w-full opacity-0 transition-opacity duration-700 group-hover:opacity-100"
           />
         )}
-        <CardBadges product={product} discount={discount} />
+        {/* Minimalistiškai — tik viena žymė: išparduota, nuolaida arba naujiena / populiariausias */}
+        {!soldOut && discount > 0 ? (
+          <span className="absolute left-3 top-3 whitespace-nowrap rounded-sm bg-sale px-2.5 py-1 text-[12px] font-medium tabular-nums text-white">
+            −{discount} %
+          </span>
+        ) : label ? (
+          <span className="absolute left-3 top-3 whitespace-nowrap rounded-sm bg-white px-2.5 py-1 text-[12px] font-medium text-black">
+            {label}
+          </span>
+        ) : null}
       </button>
 
-      <div className="flex flex-1 flex-col pt-3">
-        <p className="truncate text-[11px] font-semibold uppercase tracking-[0.08em] text-gray-500">
-          {product.audience} · {CATEGORY_BY_ID[product.category]?.label ?? 'Kolekcija'}
-        </p>
+      <div className="flex flex-1 flex-col pt-4">
         <button
           type="button"
           onClick={() => onOpen(product.id)}
-          className="mt-1 line-clamp-2 text-left text-[14px] font-bold leading-snug text-black hover:underline hover:underline-offset-2"
+          className="text-left text-[16px] font-medium leading-snug text-black md:text-[17px]"
         >
           {product.name}
         </button>
-        <p className="mt-1 truncate text-[12px] text-gray-500">{shortNotes(product.notes)}</p>
+        <p className="mt-1 text-[14px] text-gray-500">{product.audience}</p>
 
-        {product.reviewsCount > 0 && (
-          <p className="mt-1.5 flex items-center gap-1.5 text-[11px] text-gray-500">
-            <Stars rating={product.rating} size={11} />
-            <span className="tabular-nums">
-              {formatNumber(product.rating, 1)} ({formatNumber(product.reviewsCount)})
-            </span>
-          </p>
-        )}
-
-        <div className="mt-2 flex flex-wrap items-baseline gap-x-1.5">
-          {multiple && <span className="text-[12px] text-gray-500">nuo</span>}
-          <span className={`text-[16px] font-extrabold tabular-nums ${discount > 0 ? 'text-sale' : 'text-black'}`}>
+        <p className="mt-3 flex flex-wrap items-baseline gap-x-2 text-[16px] md:text-[17px]">
+          <span className={`tabular-nums ${discount > 0 ? 'text-sale' : 'text-black'}`}>
+            {multiple ? 'nuo ' : ''}
             {formatEUR(from.price)}
           </span>
           {from.compareAt > from.price && (
-            <span className="text-[12px] tabular-nums text-gray-400 line-through">{formatEUR(from.compareAt)}</span>
+            <span className="text-[14px] tabular-nums text-gray-400 line-through">{formatEUR(from.compareAt)}</span>
           )}
-        </div>
-        {unitPrice && <p className="text-[11px] tabular-nums text-gray-400">({unitPrice})</p>}
+        </p>
+        {unitPrice && <p className="mt-0.5 text-[12px] tabular-nums text-gray-400">{unitPrice}</p>}
+        {lowStock && <p className="mt-2 text-[13px] text-sale">Liko tik {product.stock} vnt.</p>}
 
-        {lowStock && (
-          <p className="mt-1.5 flex items-center gap-1 text-[11px] font-bold text-sale">
-            <Flame size={12} aria-hidden="true" /> Liko tik {product.stock} vnt.
-          </p>
-        )}
-
-        <div className="mt-auto pt-3">
+        <div className="mt-auto pt-4">
           {picking ? (
-            <div className="flex items-center gap-1 rounded-lg border border-black p-1" role="group" aria-label="Pasirinkite talpą">
+            <div className="flex h-12 items-stretch gap-1 rounded-lg border border-black p-1" role="group" aria-label="Pasirinkite talpą">
               {getSizes(product).map((size) => (
                 <button
                   key={size.id}
                   type="button"
                   onClick={() => pickSize(size.id)}
-                  className="h-8 flex-1 rounded-md bg-mist text-[11px] font-bold transition hover:bg-black hover:text-white"
+                  className="flex-1 rounded-md text-[13px] font-medium transition hover:bg-black hover:text-white"
                 >
                   {size.label}
                 </button>
@@ -157,9 +123,9 @@ export default function ProductCard({ product, onOpen, onAdd, index = 0, classNa
                 type="button"
                 onClick={() => setPicking(false)}
                 aria-label="Atšaukti"
-                className="flex size-8 shrink-0 items-center justify-center rounded-md text-gray-500 hover:text-black"
+                className="flex w-9 shrink-0 items-center justify-center rounded-md text-gray-500 hover:text-black"
               >
-                <X size={14} />
+                <X size={16} strokeWidth={1.5} />
               </button>
             </div>
           ) : (
@@ -167,24 +133,22 @@ export default function ProductCard({ product, onOpen, onAdd, index = 0, classNa
               type="button"
               onClick={handleAddClick}
               disabled={soldOut}
-              className={`flex h-10 w-full items-center justify-center gap-2 rounded-lg text-[13px] font-bold transition-all duration-300 active:scale-[0.97] ${
+              className={`flex h-12 w-full items-center justify-center gap-2 rounded-lg border text-[15px] font-medium transition-all duration-300 active:scale-[0.98] ${
                 soldOut
-                  ? 'cursor-not-allowed bg-smoke text-gray-400'
+                  ? 'cursor-not-allowed border-gray-200 text-gray-400'
                   : added
-                    ? 'bg-emerald-600 text-white'
-                    : 'bg-black text-white hover:bg-gray-800'
+                    ? 'border-emerald-600 bg-emerald-600 text-white'
+                    : 'border-black/15 text-black hover:border-black hover:bg-black hover:text-white'
               }`}
             >
               {soldOut ? (
                 'Išparduota'
               ) : added ? (
                 <>
-                  <Check size={15} strokeWidth={2.5} aria-hidden="true" /> Pridėta
+                  <Check size={17} strokeWidth={2} aria-hidden="true" /> Pridėta
                 </>
               ) : (
-                <>
-                  <ShoppingBag size={15} strokeWidth={2} aria-hidden="true" /> Į krepšelį
-                </>
+                'Į krepšelį'
               )}
             </button>
           )}
